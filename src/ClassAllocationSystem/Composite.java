@@ -51,6 +51,8 @@ class Classroom implements CampusComponent {
         if(isAvailable() == false){
             setAvailable(true);
             System.out.println("Classroom " + name + " is available.");
+        }else {
+            System.out.println("Classroom " + name + " is already available. ");
         }
     }
 }

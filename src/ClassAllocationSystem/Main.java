@@ -33,7 +33,10 @@ public class Main {
         System.out.println("The total number of available rooms for a test in building 1: " +count);
         // Reserve all classrooms in building 1
         building1.reserve();
-
+        //Cancel the reservation of classroom 1 ( reserved )
+        classroom1.cancelReservation();
+        // Try to cancel the reservation of an available class
+        classroom3.cancelReservation();
 
         //QueryAvailableRoomsCommand queryCommand = new QueryAvailableRoomsCommand(building2);
 
