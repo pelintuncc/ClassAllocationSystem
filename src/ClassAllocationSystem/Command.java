@@ -30,4 +30,8 @@ class ClassroomAdmin {
     public int executeCommand(QueryCommand command) {
         return command.execute(ResourceAllocationDepartment.getInstance());
     }
+
+    public void executeCommand(RoomCommand command) {
+        command.execute();
+    }
 }
