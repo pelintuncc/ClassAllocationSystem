@@ -14,12 +14,13 @@ interface CampusComponent {
 // Leaf class
 class Classroom implements CampusComponent {
     private final String name;
-    private final boolean available;
+    private boolean available; //FİNALI DEĞİŞTRİDİM
 
     public Classroom(String name) {
         this.name = name;
         this.available = true;
     }
+
 
     public String getName() {
         return name;
@@ -32,13 +33,25 @@ class Classroom implements CampusComponent {
         return available ? 1 : 0;
     }
 
+    public void setAvailable(boolean available) { //PELİN
+        this.available = available;
+    }
+
     public List<CampusComponent> getChildren() {
         return Collections.emptyList();
     }
 
     public void reserve() {
-        // Reserve this classroom
+        if(isAvailable() != false){
+            setAvailable(false);
+        }
         System.out.println("Classroom " + name + " reserved.");
+    }
+    public void cancelReservation(){
+        if(isAvailable() == false){
+            setAvailable(true);
+            System.out.println("Classroom " + name + " is available.");
+        }
     }
 }
 
