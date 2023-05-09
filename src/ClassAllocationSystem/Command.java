@@ -1,8 +1,7 @@
-package ClassAllocationSystem;
-
 // Command interface
 interface QueryCommand {
-    int execute(ResourceAllocationDepartment resourceAllocationDepartment);
+    void execute(ResourceAllocationDepartment resourceAllocationDepartment);
+
 }
 
 // Concrete command class
@@ -13,25 +12,42 @@ class QueryAvailableRoomsCommand implements QueryCommand {
         this.rootComponent = rootComponent;
     }
 
-    public int execute(ResourceAllocationDepartment resourceAllocationDepartment) {
+    public void execute(ResourceAllocationDepartment resourceAllocationDepartment) {
         int count = 0;
+        System.out.println("Available classrooms:");
         for (CampusComponent department : rootComponent.getChildren()) {
-            count += department.getAvailableRoomsCount();
+            for (CampusComponent floor : department.getChildren()) {
+                for (CampusComponent classroom : floor.getChildren()) {
+                    if (classroom.getAvailableRoomsCount() > 0) {
+                        System.out.println(classroom.getName());
+                        count++;
+                    }
+                }
+            }
         }
         System.out.println("Total number of rooms available for a test: " + count);
-
-        return count;
     }
 }
 
 // Invoker class
 class ClassroomAdmin {
-
-    public int executeCommand(QueryCommand command) {
-        return command.execute(ResourceAllocationDepartment.getInstance());
+    public void executeCommand(QueryCommand command) {
+        command.execute(ResourceAllocationDepartment.getInstance());
+    }
+    public boolean isSuccessful(ClassroomCommand command) {
+        try {
+            command.Execute(ResourceAllocationDepartment.getInstance());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void executeCommand(RoomCommand command) {
-        command.execute();
+    public void executeCommand2(ClassroomCommand command) {
+        try {
+            command.Execute(ResourceAllocationDepartment.getInstance());
+        } catch (Exception e) {
+            System.out.println("Failed to execute command: " + e.getMessage());
+        }
     }
 }
