@@ -1,3 +1,5 @@
+package ClassAllocationSystem;
+
 class ResourceAllocationDepartment extends Department {
     private static ResourceAllocationDepartment instance = null;
 
