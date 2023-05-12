@@ -1,5 +1,4 @@
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,23 +18,23 @@ public class Main {
         Classroom classroom5 = new Classroom("M 301");
 
         // Add classrooms to floor
-        floor1.addClassroom(classroom1);
-        floor1.addClassroom(classroom2);
-        floor1.addClassroom(classroom3);
-        floor2.addClassroom(classroom4);
-        floor3.addClassroom(classroom5);
+        floor1.add(classroom1);
+        floor1.add(classroom2);
+        floor1.add(classroom3);
+        floor2.add(classroom4);
+        floor3.add(classroom5);
 
         // Add floor to department
-        department1.addFloor(floor1);
-        department2.addFloor(floor2);
-        department2.addFloor(floor3);
+        department1.add(floor1);
+        department2.add(floor2);
+        department2.add(floor3);
 
         // Add department to building
-        building1.addDepartment(department1);
-        building2.addDepartment(department2);
+        building1.add(department1);
+        building2.add(department2);
 
-        QueryAvailableRoomsCommand queryCommand = new QueryAvailableRoomsCommand(building1);
-        QueryAvailableRoomsCommand queryCommand2 = new QueryAvailableRoomsCommand(building2);
+        QueryAvailableRoomsClassroomCommand queryCommand = new QueryAvailableRoomsClassroomCommand(building1);
+        QueryAvailableRoomsClassroomCommand queryCommand2 = new QueryAvailableRoomsClassroomCommand(building2);
 
         // Execute the command
         ClassroomAdmin classroomAdmin = new ClassroomAdmin();
@@ -44,6 +43,7 @@ public class Main {
 
         // Singleton
         ResourceAllocationDepartment.getInstance().reserve();
+
 
         building1.reserve();
         classroom1.cancelReservation();
@@ -57,9 +57,15 @@ public class Main {
         // Mark classrooms as unavailable for test days
         scheduler.markClassroomsAsUnavailable(building1, testDays);
         classroomAdmin.executeCommand(queryCommand);
+
         // Mark classrooms as available for test days
         scheduler.markClassroomsAsAvailable(building1, testDays);
         classroomAdmin.executeCommand(queryCommand);
+
+        classroom1.attach(scheduler);
+        classroom1.notifyObservers();
+        classroom2.notifyObservers(); // it is not work because there is no classroom2.attach(scheduler)
+
     }
 }
 

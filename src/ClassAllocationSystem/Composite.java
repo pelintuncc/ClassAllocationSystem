@@ -12,20 +12,39 @@ interface CampusComponent {
 
     String getName();
 
+    void add(CampusComponent component);
+
 }
 
 // Leaf class
-class Classroom implements CampusComponent {
+class Classroom implements CampusComponent, ClassroomSubject {
     private final String name;
     private boolean available;
+    private final List<ClassroomObserver> observers;
+
 
     public Classroom(String name) {
         this.name = name;
         this.available = true;
+        this.observers = new ArrayList<>();
+    }
+
+    @Override
+    public void attach(ClassroomObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void deAttach(ClassroomObserver observer) {
+        observers.remove(observer);
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void add(CampusComponent component) {
     }
 
     public boolean isAvailable() {
@@ -36,33 +55,35 @@ class Classroom implements CampusComponent {
         return available ? 1 : 0;
     }
 
-    public void markUnavailable() {
-        available = false;
-    }
-
-    public void markAvailable() {
-        available = true;
-    }
-
     public List<CampusComponent> getChildren() {
         return Collections.emptyList();
     }
 
     public void setAvailable(boolean available) {
         this.available = available;
+        notifyObservers();
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (ClassroomObserver observer : observers) {
+            observer.update(this);
+        }
     }
 
     public void reserve() {
         if (isAvailable()) {
             setAvailable(false);
+            System.out.println("Classroom " + name + " reserved.");
+        } else {
+            System.out.println("Classroom " + name + " reserved already.");
         }
-        System.out.println("Classroom " + name + " reserved.");
     }
 
     public void cancelReservation() {
         if (!isAvailable()) {
-            setAvailable(true);
             System.out.println("Classroom " + name + " is not reserved anymore.");
+            setAvailable(true);
         } else {
             System.out.println("Classroom " + name + " is already available. ");
         }
@@ -79,7 +100,7 @@ class Building implements CampusComponent {
         this.name = name;
     }
 
-    public void addDepartment(CampusComponent department) {
+    public void add(CampusComponent department) {
         departments.add(department);
     }
 
@@ -122,7 +143,7 @@ class Department implements CampusComponent {
         this.name = name;
     }
 
-    public void addFloor(CampusComponent floor) {
+    public void add(CampusComponent floor) {
         floors.add(floor);
     }
 
@@ -162,7 +183,7 @@ class Floor implements CampusComponent {
         return name;
     }
 
-    public void addClassroom(CampusComponent classroom) {
+    public void add(CampusComponent classroom) {
         classrooms.add(classroom);
     }
 
