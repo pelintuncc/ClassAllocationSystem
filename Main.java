@@ -157,34 +157,41 @@ public class Main {
                         System.out.println("Invalid day of the week. Exam scheduling failed.");
                         return;
                     }
-                    System.out.println("Reserved classrooms:");
+                    System.out.println("Reserved classrooms for: " + lessonDay21);
                     ClassroomIterator classroomIterator = new ConcreteClassroomIterator(building1);
+                    boolean hasReservedClassrooms = false;
                     while (classroomIterator.hasNext()) {
                         Classroom classroom = classroomIterator.next();
-                        if (!classroom.isAvailable()) {
+                        if (!classroom.isAvailable(lessonDay21)) {
                             System.out.println("Classroom: " + classroom.getName());
+                            hasReservedClassrooms = true;
                         }
                     }
-                    System.out.print("Enter the classroom name to cancel the reservation: ");
-                    String classroomName = scanner.next();
 
-                     // Find the selected classroom and cancel the reservation
-                    Classroom selectedClassroom = null;
-                    classroomIterator = new ConcreteClassroomIterator(building1);
-                    while (classroomIterator.hasNext()) {
-                        Classroom classroom = classroomIterator.next();
-                        if (classroom.getName().equals(classroomName) && !classroom.isAvailable()) {
-                            selectedClassroom = classroom;
-                            break;
-                        }
-                    }
-                    if (selectedClassroom != null) {
-                        selectedClassroom.cancelReservation(lessonDay21);
-                        System.out.println("Reservation for Classroom " + selectedClassroom.getName() + " has been canceled.");
+                    if (!hasReservedClassrooms) {
+                        System.out.println("No classrooms are reserved for " + lessonDay21);
                     } else {
-                        System.out.println("Invalid classroom name or the classroom is not reserved.");
-                    }
+                        System.out.print("Enter the classroom name to cancel the reservation: ");
+                        String classroomName = scanner.next();
 
+                        // Find the selected classroom and cancel the reservation
+                        Classroom selectedClassroom = null;
+                        classroomIterator = new ConcreteClassroomIterator(building1);
+                        while (classroomIterator.hasNext()) {
+                            Classroom classroom = classroomIterator.next();
+                            if (classroom.getName().equals(classroomName) && !classroom.isAvailable()) {
+                                selectedClassroom = classroom;
+                                break;
+                            }
+                        }
+
+                        if (selectedClassroom != null) {
+                            selectedClassroom.cancelReservation(lessonDay21);
+                            System.out.println("Reservation for Classroom " + selectedClassroom.getName() + " has been canceled.");
+                        } else {
+                            System.out.println("Invalid classroom name or the classroom is not reserved.");
+                        }
+                    }
                     break;
                 case 3:
                     System.out.println("Enter the day of the week for the exam:");
